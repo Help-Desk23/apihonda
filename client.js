@@ -3,11 +3,11 @@ const socket = io('http://localhost:4000');
 
 socket.on('connect', () => {
     console.log('Conectado al servidor WebSocket');
-    socket.emit('obtenerMotos');
+    socket.emit('obtenerClientes');
 });
 
-socket.on('motos', (data) => {
-    console.log('Motos recibidas:', data);
+socket.on('cliente', (data) => {
+    console.log('Clientes Recibidos:', data);
 });
 
 socket.on('disconnect', () => {

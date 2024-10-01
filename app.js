@@ -5,6 +5,7 @@ const path = require('path');
 const {db, sql} = require('./config/db');
 const { getMotos, addMoto, deleteMoto } = require('./controllers/motos/motos');
 const { moto } = require('./router/motos/motoRouter');
+const { getClientes } = require('./controllers/cliente/cliente');
 
 
 const app = express();
@@ -27,6 +28,7 @@ const io = socketIo(server);
 io.on('connection', (socket) => {
     console.log('Cliente conectado:', socket.id);
 
+// Motos
 
     socket.on('obtenerMotos', () => {
         getMotos(socket);
@@ -34,6 +36,13 @@ io.on('connection', (socket) => {
 
     socket.on('eliminarMoto', (data) =>{
         deleteMoto(socket, data);
+    });
+
+
+// Clientes
+
+    socket.on('obtenerClientes', () => {
+        getClientes(socket);
     });
 
     socket.on('disconnect', () => {

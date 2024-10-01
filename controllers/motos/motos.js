@@ -62,27 +62,6 @@ const addMoto = async (req, res) => {
 
 // Controlador DELETE
 
-/*
-
-const deleteMoto = async (req, res) => {
-    const { id_motos } = req.params;
-
-    try{
-        const pool = await sql.connect(db);
-        const result = await pool.request()
-            .input('id_motos', sql.Int, id_motos)
-            .query('SELECT * FROM id_motos = @id_motos');
-
-        if(result.recordset.length === 0){
-            return res.status(400).json({error: "Moto no encontrada"});
-
-            res.status(200).json({message: "Motos eliminada exitosamente"});
-        }
-    }catch(err){
-        console.error("Error al eliminar la moto:", err);
-        res.status(500).json({error: "Error al eliminar la moto"});
-    }
-};*/
 
 const deleteMoto = async (socket, data) => {
     const { id_motos } = data; 
