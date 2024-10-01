@@ -9,6 +9,7 @@ const { getClientes, getCliente } = require('./controllers/cliente/cliente');
 const { client } = require('./router/cliente/clienteRouter');
 const { getSucursales } = require('./controllers/sucursales/sucursal');
 const { sucursal } = require('./router/sucursales/sucursalesRouter');
+const { getAsesores } = require('./controllers/asesor/asesor');
 
 
 const app = express();
@@ -56,6 +57,12 @@ io.on('connection', (socket) => {
 
     socket.on('obtenerSucursales', () => {
         getSucursales(socket);
+    });
+
+// Asesores
+
+    socket.on('obtenerAsesores', () => {
+        getAsesores(socket);
     });
 
     socket.on('disconnect', () => {
