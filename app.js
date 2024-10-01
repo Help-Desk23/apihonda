@@ -41,6 +41,11 @@ io.on('connection', (socket) => {
     });
 });
 
+// Ruta Inicial
+
+app.get("/", (req, res) => {
+    res.json({message: "Welcome!"});
+});
 
 // Motos
 

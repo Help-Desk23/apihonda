@@ -23,6 +23,7 @@ const getMotos = async (socket) => {
     try {
         const pool = await sql.connect(db);
         const result = await pool.request().query('SELECT * FROM motos');
+        console.log('Consulta ejecutada, resultados:', result.recordset);
 
         if (result.recordset.length === 0) {
             return socket.emit('error', { message: 'No se encontró ninguna moto' });
@@ -41,7 +42,7 @@ const addMoto = async (req, res) => {
     const { modelo, precious, inicialbs } = req.body;
 
     const port = req.get('host').split(':')[1];
-    const img_motos = req.file ? `http://192.168.2.14:${port}/uploads/${req.file.filename}` : null;
+    const img_motos = req.file ? `http://192.168.2.21:${port}/uploads/${req.file.filename}` : null;
 
     try{
         const pool = await sql.connect(db);
