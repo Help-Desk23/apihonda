@@ -7,6 +7,8 @@ const { getMotos, addMoto, deleteMoto } = require('./controllers/motos/motos');
 const { moto } = require('./router/motos/motoRouter');
 const { getClientes, getCliente } = require('./controllers/cliente/cliente');
 const { client } = require('./router/cliente/clienteRouter');
+const { getSucursales } = require('./controllers/sucursales/sucursal');
+const { sucursal } = require('./router/sucursales/sucursalesRouter');
 
 
 const app = express();
@@ -50,6 +52,12 @@ io.on('connection', (socket) => {
         getCliente(socket);
     });
 
+// Sucursales
+
+    socket.on('obtenerSucursales', () => {
+        getSucursales(socket);
+    });
+
     socket.on('disconnect', () => {
         console.log('Cliente desconectado:', socket.id);
     });
@@ -68,6 +76,10 @@ app.use("/", moto);
 // Clientes
 
 app.use("/", client);
+
+// Sucursal
+
+app.use('/', sucursal);
 
 
 
