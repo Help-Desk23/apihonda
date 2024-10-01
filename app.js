@@ -5,7 +5,8 @@ const path = require('path');
 const {db, sql} = require('./config/db');
 const { getMotos, addMoto, deleteMoto } = require('./controllers/motos/motos');
 const { moto } = require('./router/motos/motoRouter');
-const { getClientes } = require('./controllers/cliente/cliente');
+const { getClientes, getCliente } = require('./controllers/cliente/cliente');
+const { client } = require('./router/cliente/clienteRouter');
 
 
 const app = express();
@@ -45,6 +46,10 @@ io.on('connection', (socket) => {
         getClientes(socket);
     });
 
+    socket.on('obtenerCliente', () => {
+        getCliente(socket);
+    });
+
     socket.on('disconnect', () => {
         console.log('Cliente desconectado:', socket.id);
     });
@@ -59,6 +64,14 @@ app.get("/", (req, res) => {
 // Motos
 
 app.use("/", moto);
+
+// Clientes
+
+app.use("/", client);
+
+
+
+// Ruta Muestra Imagenes de Motos
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
