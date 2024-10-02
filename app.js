@@ -10,6 +10,8 @@ const { client } = require('./router/cliente/clienteRouter');
 const { getSucursales } = require('./controllers/sucursales/sucursal');
 const { sucursal } = require('./router/sucursales/sucursalesRouter');
 const { getAsesores } = require('./controllers/asesor/asesor');
+const { getCosto } = require('./controllers/costovarios/costo');
+const { costo } = require('./router/costovarios/costoRouter');
 
 
 const app = express();
@@ -65,6 +67,12 @@ io.on('connection', (socket) => {
         getAsesores(socket);
     });
 
+// Interes Anual y Formulario
+
+    socket.on('obtenerCostos', () => {
+        getCosto(socket);
+    });
+
     socket.on('disconnect', () => {
         console.log('Cliente desconectado:', socket.id);
     });
@@ -86,8 +94,12 @@ app.use("/", client);
 
 // Sucursal
 
-app.use('/', sucursal);
+app.use("/", sucursal);
 
+
+// Costo Varios
+
+app.use("/", costo);
 
 
 // Ruta Muestra Imagenes de Motos
