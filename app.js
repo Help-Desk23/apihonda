@@ -13,7 +13,7 @@ const { getAsesores } = require('./controllers/asesor/asesor');
 const { getCosto } = require('./controllers/costovarios/costo');
 const { costo } = require('./router/costovarios/costoRouter');
 const { asesores } = require('./router/asesor/asesorRouter');
-const { getProformas } = require('./controllers/proforma/proforma');
+const { getProformas, getCotizacion } = require('./controllers/proforma/proforma');
 const { proform } = require('./router/proforma/proformaRouter');
 
 
@@ -54,10 +54,6 @@ io.on('connection', (socket) => {
         getClientes(socket);
     });
 
-    socket.on('obtenerCliente', () => {
-        getCliente(socket);
-    });
-
 // Sucursales
 
     socket.on('obtenerSucursales', () => {
@@ -80,6 +76,10 @@ io.on('connection', (socket) => {
 
     socket.on('obtenerProforma', () => {
         getProformas(socket);
+    });
+
+    socket.on('obtenerCotizacion', () =>{
+        getCotizacion(socket);
     });
 
     socket.on('disconnect', () => {

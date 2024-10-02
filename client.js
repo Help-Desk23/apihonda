@@ -3,10 +3,10 @@ const socket = io('http://localhost:4000');
 
 socket.on('connect', () => {
     console.log('Conectado al servidor WebSocket');
-    socket.emit('obtenerCostos');
+    socket.emit('obtenerCotizacion');
 });
 
-socket.on('costovarios', (data) => {
+socket.on('proformaData', (data) => {
     console.log('Clientes Recibidos:', data);
 });
 

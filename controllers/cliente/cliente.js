@@ -32,8 +32,7 @@ const addCliente = async(req, res) => {
         const result = await pool.request()
         .input('nombre', sql.VarChar, nombre)
         .input('telefono', sql.Int, telefono)
-        .query(` INSERT INTO cliente (nombre, telefono) 
-            VALUES (@nombre, @telefono`);
+        .query('INSERT INTO cliente (nombre, telefono) VALUES (@nombre, @telefono)');
 
             res.status(201).json({message: 'Cliente agregado correctamente'})
     } catch(err) {
