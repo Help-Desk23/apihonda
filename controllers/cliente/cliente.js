@@ -22,22 +22,18 @@ const getClientes = async (socket) => {
 
 const addCliente = async(req, res) => {
     try{
-        const {nombre, telefono, plazo, precious, inicialbs, cuota_mes, id_motos, id_asesores, id_sucursal} = req.body;
+        const {nombre, telefono} = req.body;
+
+        if (!nombre || !telefono) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
 
         const pool = await sql.connect(db);
         const result = await pool.request()
         .input('nombre', sql.VarChar, nombre)
         .input('telefono', sql.Int, telefono)
-        .input('plazo', sql.Int, plazo)
-        .input('precious', sql.VarChar, precious)
-        .input('inicialbs', sql.VarChar, inicialbs)
-        .input('fecha', sql.Date, new Date())
-        .input('cuota_mes', sql.Decimal(5,2), cuota_mes)
-        .input('id_motos', sql.Int, id_motos)
-        .input('id_asesores', sql.Int, id_asesores)
-        .input('id_sucursal', sql.Int, id_sucursal)
-        .query(` INSERT INTO cliente (nombre, telefono, plazo, precious, inicialbs, fecha, cuota_mes, id_motos, id_asesores, id_sucursal) 
-            VALUES (@nombre, @telefono, @plazo, @precious, @inicialbs, @fecha, @cuota_mes, @id_motos, @id_asesores, @id_sucursal)`);
+        .query(` INSERT INTO cliente (nombre, telefono) 
+            VALUES (@nombre, @telefono`);
 
             res.status(201).json({message: 'Cliente agregado correctamente'})
     } catch(err) {
@@ -46,47 +42,45 @@ const addCliente = async(req, res) => {
     }
 };
 
+// Controlador GET para buscar clientes
 
-// Controlador GET para mostrar Cliente Completos
 
-const getCliente = async (socket) => {
+const searchCliente = async (req, res) => {
     try {
-        const pool = await sql.connect(db);
-        
-        const result = await pool.request()
-            .query(`
-                SELECT 
-                    c.id_cliente,
-                    c.nombre AS nombre_cliente,
-                    c.telefono,
-                    c.plazo,
-                    c.precious,
-                    c.inicialbs,
-                    c.fecha,
-                    c.cuota_mes,
-                    m.modelo AS modelo,
-                    a.nombre AS asesor,
-                    s.sucursal AS sucursal,
-                    m.img_motos AS img_moto
-                FROM 
-                    cliente c
-                JOIN 
-                    motos m ON c.id_motos = m.id_motos
-                JOIN 
-                    asesores a ON c.id_asesores = a.id_asesores
-                JOIN 
-                    sucursales s ON c.id_sucursal = s.id_sucursal
-            `);
+        const { nombre, telefono } = req.query;
 
-        if (result.recordset.length === 0) {
-            return socket.emit( 'error', { message: 'No se encontraron registros' });
+        if (!nombre && !telefono) {
+            return res.status(400).json({ error: 'Se debe proporcionar al menos el parámetro "nombre" o "telefono"' });
         }
 
-        socket.emit('clienteData', result.recordset);
-        
+        const pool = await sql.connect(db);
+        const request = pool.request();
+
+        let query = `SELECT * FROM cliente WHERE `;
+        const conditions = [];
+
+        if (nombre) {
+            conditions.push(`nombre LIKE @nombre`);
+            request.input('nombre', sql.VarChar, `%${nombre}%`);
+        }
+
+        if (telefono) {
+            conditions.push(`telefono = @telefono`);
+            request.input('telefono', sql.Int, telefono);
+        }
+
+        query += conditions.join(' OR ');
+
+        const result = await request.query(query);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).json({ message: "No se encontraron clientes" });
+        }
+
+        res.status(200).json(result.recordset);
     } catch (err) {
-        console.error('Error al obtener el reporte de cliente:', err);
-        socket.emit('error', { message: 'Error al obtener el reporte de cliente' });
+        console.error("Error al buscar cliente por nombre o teléfono", err);
+        res.status(500).json({ error: "Error en el servidor al buscar cliente" });
     }
 };
 
@@ -94,7 +88,7 @@ const getCliente = async (socket) => {
 module.exports = {
     getClientes,
     addCliente,
-    getCliente
+    searchCliente
 };
 
 

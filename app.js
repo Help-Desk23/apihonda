@@ -12,6 +12,9 @@ const { sucursal } = require('./router/sucursales/sucursalesRouter');
 const { getAsesores } = require('./controllers/asesor/asesor');
 const { getCosto } = require('./controllers/costovarios/costo');
 const { costo } = require('./router/costovarios/costoRouter');
+const { asesores } = require('./router/asesor/asesorRouter');
+const { getProformas } = require('./controllers/proforma/proforma');
+const { proform } = require('./router/proforma/proformaRouter');
 
 
 const app = express();
@@ -73,6 +76,12 @@ io.on('connection', (socket) => {
         getCosto(socket);
     });
 
+// Proformas
+
+    socket.on('obtenerProforma', () => {
+        getProformas(socket);
+    });
+
     socket.on('disconnect', () => {
         console.log('Cliente desconectado:', socket.id);
     });
@@ -96,11 +105,17 @@ app.use("/", client);
 
 app.use("/", sucursal);
 
+// Asesores
+
+app.use("/", asesores);
 
 // Costo Varios
 
 app.use("/", costo);
 
+// Proforma
+
+app.use("/", proform);
 
 // Ruta Muestra Imagenes de Motos
 
