@@ -40,6 +40,7 @@ const addAsesores = async(req, res) => {
     }
 };
 
+// Controlador GET para Login Asesor
 
 const loginAsesores = async (req, res) => {
     const { usuario, contraseña } = req.body;
