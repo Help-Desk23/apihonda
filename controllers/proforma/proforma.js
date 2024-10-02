@@ -24,6 +24,10 @@ const addProforma = async(req, res) => {
     try{
         const {id_cliente, id_motos, id_asesores, id_sucursal, plazo, precious, inicialbs, cuota_mes} = req.body;
 
+        if (!id_cliente || !id_motos || !id_asesores || !id_sucursal || !plazo || !precious || !inicialbs || !cuota_mes) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
+
         const pool = await sql.connect(db);
         const result = await pool.request()
         .input('id_cliente', sql.Int, id_cliente)
