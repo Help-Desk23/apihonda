@@ -23,11 +23,9 @@ const getClientes = async (socket) => {
 const addCliente = async (req, res) => {
     try {
         const { nombre, telefono } = req.body;
-
         if (!nombre || !telefono) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios' });
         }
-
         const pool = await sql.connect(db);
 
         // Verificar si el cliente ya existe
