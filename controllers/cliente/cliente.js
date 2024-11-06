@@ -28,7 +28,6 @@ const addCliente = async (req, res) => {
         }
         const pool = await sql.connect(db);
 
-        // Verificar si el cliente ya existe
         const checkCliente = await pool.request()
             .input('nombre', sql.VarChar, nombre)
             .input('telefono', sql.Int, telefono)
@@ -37,10 +36,10 @@ const addCliente = async (req, res) => {
         let clienteId;
 
         if (checkCliente.recordset.length > 0) {
-            // Si el cliente existe, usar el ID existente
+
             clienteId = checkCliente.recordset[0].id_cliente;
         } else {
-            // Si el cliente no existe, insertar un nuevo registro
+
             const result = await pool.request()
                 .input('nombre', sql.VarChar, nombre)
                 .input('telefono', sql.Int, telefono)
