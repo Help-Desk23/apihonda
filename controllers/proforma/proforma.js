@@ -68,7 +68,7 @@ const getCotizacion = async (socket) => {
                     p.fecha,
                     p.cuota_mes,
                     m.modelo AS modelo,
-                    a.nombre AS asesor,
+                    a.asesor AS asesor,
                     s.sucursal AS sucursal,
                     m.img_motos AS img_moto
                 FROM 
