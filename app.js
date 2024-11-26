@@ -35,7 +35,6 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 io.on('connection', (socket) => {
-    console.log('Cliente conectado:', socket.id);
 
 // Motos
 
