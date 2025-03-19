@@ -146,5 +146,6 @@ const getCliente = async (socket) => {
         console.error('Error al obtener el reporte de cliente:', err);
         socket.emit('error', { message: 'Error al obtener el reporte de cliente' });
     }
+        prueba
 };
 */
