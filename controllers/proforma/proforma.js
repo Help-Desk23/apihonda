@@ -35,8 +35,8 @@ const addProforma = async(req, res) => {
         .input('id_asesores', sql.Int, id_asesores)
         .input('id_sucursal', sql.Int, id_sucursal)
         .input('plazo', sql.Int, plazo)
-        .input('precious', sql.VarChar, precious)
-        .input('inicialbs', sql.VarChar, inicialbs)
+        .input('precious', sql.Int, precious)
+        .input('inicialbs', sql.Int, inicialbs)
         .input('fecha', sql.Date, new Date())
         .input('cuota_mes', sql.Decimal(5,2), cuota_mes)
         .query(`INSERT INTO proforma (id_cliente, id_motos, id_asesores, id_sucursal, plazo, precious, inicialbs, fecha, cuota_mes) 
@@ -68,7 +68,7 @@ const getCotizacion = async (socket) => {
                     p.fecha,
                     p.cuota_mes,
                     m.modelo AS modelo,
-                    a.nombre AS asesor,
+                    a.asesor AS asesor,
                     s.sucursal AS sucursal,
                     m.img_motos AS img_moto
                 FROM 

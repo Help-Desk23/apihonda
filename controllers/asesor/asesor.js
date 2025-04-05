@@ -21,17 +21,17 @@ const getAsesores = async (socket) => {
 // Controlador POST para agregar asesores
 
 const addAsesores = async(req, res) => {
-    const { nombre, usuario, contraseña, id_sucursal } = req.body;
+    const { asesor, usuario, contraseña, id_sucursal } = req.body;
 
     try{
     const pool = await sql.connect(db);
 
     const result = await pool.request()
-    .input('nombre', sql.VarChar, nombre)
+    .input('asesor', sql.VarChar, asesor)
     .input('usuario', sql.VarChar, usuario)
     .input('contraseña', sql.VarChar, contraseña)
     .input('id_sucursal', sql.Int, id_sucursal)
-    .query('INSERT INTO asesores (nombre, usuario, contraseña, id_sucursal) VALUES (@nombre, @usuario, @contraseña, @id_sucursal)');
+    .query('INSERT INTO asesores (asesor, usuario, contraseña, id_sucursal) VALUES (@asesor, @usuario, @contraseña, @id_sucursal)');
 
     res.status(201).json({ message: 'Asesor ingresado exitosamente'});
     } catch (err){

@@ -20,27 +20,40 @@ const getClientes = async (socket) => {
 
 // Controlador POST para agregar clientes
 
-const addCliente = async(req, res) => {
-    try{
-        const {nombre, telefono} = req.body;
-
+const addCliente = async (req, res) => {
+    try {
+        const { nombre, telefono } = req.body;
         if (!nombre || !telefono) {
             return res.status(400).json({ error: 'Todos los campos son obligatorios' });
         }
-
         const pool = await sql.connect(db);
-        const result = await pool.request()
-        .input('nombre', sql.VarChar, nombre)
-        .input('telefono', sql.Int, telefono)
-        .query('INSERT INTO cliente (nombre, telefono) VALUES (@nombre, @telefono)');
 
-            res.status(201).json({message: 'Cliente agregado correctamente'})
-    } catch(err) {
+        const checkCliente = await pool.request()
+            .input('nombre', sql.VarChar, nombre)
+            .input('telefono', sql.Int, telefono)
+            .query('SELECT id_cliente FROM cliente WHERE nombre = @nombre AND telefono = @telefono');
+
+        let clienteId;
+
+        if (checkCliente.recordset.length > 0) {
+
+            clienteId = checkCliente.recordset[0].id_cliente;
+        } else {
+
+            const result = await pool.request()
+                .input('nombre', sql.VarChar, nombre)
+                .input('telefono', sql.Int, telefono)
+                .query('INSERT INTO cliente (nombre, telefono) OUTPUT INSERTED.id_cliente VALUES (@nombre, @telefono)');
+
+            clienteId = result.recordset[0].id_cliente;
+        }
+
+        res.status(201).json({ message: 'Cliente agregado correctamente', id_cliente: clienteId });
+    } catch (err) {
         console.error('Error al agregar cliente', err);
-        res.status(500).json({ error: 'Error al agregar cliente'});
+        res.status(500).json({ error: 'Error al agregar cliente' });
     }
 };
-
 // Controlador GET para buscar clientes
 
 
